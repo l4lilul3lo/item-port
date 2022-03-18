@@ -1,9 +1,8 @@
-const pool = require("../config/db");
-const bcrypt = require("bcrypt");
+const pool = require("../../config/db");
 
 const getUserByEmail = async (email) => {
   try {
-    const res = await pool.query(`SELECT * FROM users WHERE user_email = $1`, [
+    const res = await pool.query(`SELECT * FROM users WHERE email = $1`, [
       email,
     ]);
 
@@ -15,7 +14,7 @@ const getUserByEmail = async (email) => {
 
 const getUserByUsername = async (username) => {
   try {
-    const res = await pool.query(`SELECT * FROM users WHERE user_name = $1`, [
+    const res = await pool.query(`SELECT * FROM users WHERE name = $1`, [
       username,
     ]);
     return res.rows[0];
@@ -26,25 +25,25 @@ const getUserByUsername = async (username) => {
 
 const createCart = async (user_id) => {
   try {
-    await pool.query(`INSERT INTO CARTS (user_id) VALUES $1`, [user_id]);
+    await pool.query(`INSERT INTO CARTS (user_id) VALUES ($1)`, [user_id]);
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-const createUser = async (user_name, email, hashedPassword) => {
+const createUser = async (username, email, hashedPassword) => {
   try {
     pool.query(
-      `INSERT INTO users (user_name, user_email, user_password)
+      `INSERT INTO users (name, email, password)
       VALUES ($1, $2, $3)`,
-      [user_name, email, hashedPassword]
+      [username, email, hashedPassword]
     );
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-const deleteUser = async (user_name, email, hashedPassword) => {
+const deleteUser = async (username, email, hashedPassword) => {
   try {
   } catch (error) {}
 };

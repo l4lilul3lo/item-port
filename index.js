@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require("express-session");
-const { register, login, logout } = require("./controllers/register");
+
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const redisClient = require("./config/redis");
@@ -12,22 +12,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const { isAuth } = require("./middleware/isAuth");
-const { isAuthenticated } = require("./controllers/isAuthenticated");
-const { getUserInfo } = require("./controllers/getUserInfo");
-const { checkUsernameExists } = require("./controllers/checkUsernameExists");
-const { checkEmailExists } = require("./controllers/checkEmailExists.js");
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   res.header("Access-Control-Allow-Credentials", true); // allows cookie to be sent
-//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, HEAD, DELETE"); // you must specify the methods used with credentials. "*" will not work.
-//   next();
-// });
+const {
+  register,
+  checkEmailExists,
+  checkUsernameExists,
+} = require("./controllers/users/registration");
+const {
+  login,
+  isAuthenticated,
+  getUserInfo,
+  logout,
+} = require("./controllers/users/user");
 
-// When a request is made, a session object is attached
+const { fetchAllProducts } = require("./controllers/products/products");
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -36,16 +33,14 @@ app.use(
     saveUninitialized: false,
     rolling: true,
     cookie: {
-      maxAge: 1000 * 60 * 15, // 10 seconds
+      maxAge: 1000 * 60,
     },
   })
 );
 
-// app.get("/api/register", isAuth, (req, res) => {
-//   res.send();
-// });
-
-// app.post("/api/register", isAuth, validateForm, register);
+//app.use("/registration", registration)
+//app.use("/user", user)
+//app.use("/products", products)
 app.get("/", (req, res) => {
   res.status(200).json("hello");
 });
@@ -65,6 +60,8 @@ app.get("/getUserInfo", isAuth, getUserInfo);
 app.post("/checkUsernameExists", checkUsernameExists);
 
 app.post("/checkEmailExists", checkEmailExists);
+
+app.get("/allProducts", fetchAllProducts);
 
 app.get("/dashboard", isAuth, (req, res) => {
   res.json({ user_id: req.session.user_id });
