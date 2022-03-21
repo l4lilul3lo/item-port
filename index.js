@@ -20,11 +20,11 @@ const {
 const {
   login,
   isAuthenticated,
-  getUserInfo,
+  getUserData,
   logout,
 } = require("./controllers/users/user");
 
-const { fetchAllProducts } = require("./controllers/products/products");
+const { getProducts, getProduct } = require("./controllers/products/products");
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -55,13 +55,20 @@ app.post("/logout", logout);
 
 app.post("/userImage");
 
-app.get("/getUserInfo", isAuth, getUserInfo);
+app.get("/getUserData", isAuth, getUserData);
 
 app.post("/checkUsernameExists", checkUsernameExists);
 
 app.post("/checkEmailExists", checkEmailExists);
 
-app.get("/allProducts", fetchAllProducts);
+app.get("/products", getProducts);
+
+app.get("/products/:id", getProduct);
+
+app.get("/test", (req, res) => {
+  console.log(Object.keys(req.query).length === 0);
+  return res.status(200).send("goodjob");
+});
 
 app.get("/dashboard", isAuth, (req, res) => {
   res.json({ user_id: req.session.user_id });

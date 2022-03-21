@@ -222,3 +222,6 @@ newProducts.forEach((x) => {
     [x.title, x.price, x.description, x.category, x.image]
   );
 });
+
+// top level categories will lead to category pages.
+// These category pages will fetch products

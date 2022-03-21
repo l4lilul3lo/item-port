@@ -48,7 +48,7 @@ const isAuthenticated = async (req, res) => {
   }
 };
 
-const getUserInfo = async (req, res) => {
+const getUserData = async (req, res) => {
   console.log(req.session.user);
   const { username, image } = req.session.user;
   return res.status(200).json({
@@ -64,4 +64,4 @@ const logout = (req, res) => {
   res.status(200).json({ message: "Logged out successfuly" });
 };
 
-module.exports = { login, isAuthenticated, getUserInfo, logout };
+module.exports = { login, isAuthenticated, getUserData, logout };
