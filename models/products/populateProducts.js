@@ -224,4 +224,4 @@ newProducts.forEach((x) => {
 });
 
 // top level categories will lead to category pages.
-// These category pages will fetch products
+// These category pages will fetch products in the category.

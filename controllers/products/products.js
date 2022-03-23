@@ -12,16 +12,38 @@ const getProducts = async (req, res) => {
   //
   let products = await getProductsDB();
 
-  // if req.query is not empty, return getAll products with queried results.
-  // sift(req.query)
-  return res.status(200).json(products);
+  console.log(products);
+  let newObj = products.map((x) => {
+    return {
+      id: x.id,
+      info: {
+        title: x.title,
+        price: x.price,
+        category: x.category,
+        description: x.description,
+        image: x.image,
+      },
+    };
+  });
+  console.log(newObj);
+  return res.status(200).json(newObj);
 };
 
 const getProduct = async (req, res) => {
   const productId = req.params.id;
   let product = await getProductDB(productId);
-  console.log(product);
-  return res.status(200).json(product);
+  let newObj = {
+    id: product.id,
+    info: {
+      title: product.title,
+      price: product.price,
+      category: product.category,
+      description: product.description,
+      image: product.image,
+    },
+  };
+
+  return res.status(200).json(newObj);
 };
 
 module.exports = { getProducts, getProduct };
