@@ -5,6 +5,7 @@ const isAuth = async (req, res, next) => {
     if (req.session.user) {
       return next();
     }
+
     return res.status(401).json({ message: "Not Authorized" });
   } catch (err) {
     console.error(err);

@@ -2,6 +2,7 @@ const {
   getProductsDB,
   getProductDB,
 } = require("../../models/products/products");
+
 const getProducts = async (req, res) => {
   if (Object.keys(req.query).length === 1) {
     // there will always be a default limit set so length will be one without other queries.
@@ -9,7 +10,6 @@ const getProducts = async (req, res) => {
     // return res.status(200).json(products);
   }
 
-  //
   let products = await getProductsDB();
 
   console.log(products);
@@ -25,7 +25,7 @@ const getProducts = async (req, res) => {
       },
     };
   });
-  console.log(newObj);
+
   return res.status(200).json(newObj);
 };
 

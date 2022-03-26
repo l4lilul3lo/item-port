@@ -13,15 +13,22 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(helmet());
 const { isAuth } = require("./middleware/isAuth");
-const { register, verifyEmail } = require("./controllers/users/registration");
-const {
-  login,
-  isAuthenticated,
-  getUserData,
-  logout,
-} = require("./controllers/users/user");
+const { login, getUserData, logout } = require("./controllers/users/user");
 
 const { getProducts, getProduct } = require("./controllers/products/products");
+const { verification } = require("./controllers/registration/verification");
+const {
+  onSiteVerification,
+} = require("./middleware/registration/onSiteVerification");
+
+const { registration } = require("./controllers/registration/registration");
+const {
+  checkUsernameExists,
+} = require("./controllers/registration/checkUsernameExists");
+const {
+  onSiteRegistration,
+} = require("./middleware/registration/onSiteRegistration");
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -30,7 +37,7 @@ app.use(
     saveUninitialized: false,
     rolling: true,
     cookie: {
-      maxAge: 1000 * 60,
+      maxAge: 1000 * 60 * 15,
     },
   })
 );
@@ -39,11 +46,11 @@ app.get("/", (req, res) => {
   res.status(200).json("hello");
 });
 
-app.get("/isAuthenticated", isAuthenticated);
+app.post("/register", onSiteRegistration, registration);
 
-app.post("/register", register);
+app.post("/checkUsernameExists", checkUsernameExists);
 
-app.post("/verify/:token", verifyEmail);
+app.get("/verify/:token", onSiteVerification, verification);
 
 app.post("/login", login);
 
@@ -56,15 +63,6 @@ app.get("/getUserData", isAuth, getUserData);
 app.get("/products", getProducts);
 
 app.get("/products/:id", getProduct);
-
-app.get("/test", (req, res) => {
-  console.log(Object.keys(req.query).length === 0);
-  return res.status(200).send("goodjob");
-});
-
-app.get("/dashboard", isAuth, (req, res) => {
-  res.json({ user_id: req.session.user_id });
-});
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

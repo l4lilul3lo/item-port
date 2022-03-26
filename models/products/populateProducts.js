@@ -216,12 +216,20 @@ let newProducts = products.map((x) => ({
   image: x.image,
 }));
 
-newProducts.forEach((x) => {
-  pool.query(
-    `INSERT INTO products (title, price, description, category, image) VALUES ($1, $2, $3, $4, $5)`,
-    [x.title, x.price, x.description, x.category, x.image]
-  );
-});
+const populateProducts = async () => {
+  try {
+    newProducts.forEach((x) => {
+      pool.query(
+        `INSERT INTO products (title, price, description, category, image) VALUES ($1, $2, $3, $4, $5)`,
+        [x.title, x.price, x.description, x.category, x.image]
+      );
+    });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+module.exports = { populateProducts };
 
 // top level categories will lead to category pages.
 // These category pages will fetch products in the category.

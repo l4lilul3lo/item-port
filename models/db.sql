@@ -2,7 +2,7 @@ CREATE DATABASE itemport;
 
 CREATE TABLE users(
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name VARCHAR(255) UNIQUE NOT NULL,
+  username VARCHAR(255) UNIQUE NOT NULL,
   profile TEXT,
   image VARCHAR(255), -- url
   email VARCHAR(255) UNIQUE NOT NULL,
